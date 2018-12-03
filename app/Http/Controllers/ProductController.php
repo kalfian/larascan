@@ -68,7 +68,7 @@ class ProductController extends Controller
         ->insert([
             'loc' => $request->loc,
             'batch' => $request->batch,
-            'exp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->exp))),
+            'exp' => $request->exp,
             'karton' => $request->karton,
             'status' => '2',
             'created_at' => date('Y-m-d H:i:s'),

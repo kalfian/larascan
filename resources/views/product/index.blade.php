@@ -168,7 +168,8 @@
         dataTable.fnFilter(this.value);
     });
     $("#exp").datepicker({
-        autoclose: true
+        autoclose: true,
+        format: 'yyyy-mm-dd'
     });
 </script>
 @endsection
