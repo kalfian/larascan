@@ -25,5 +25,6 @@ class HomeController extends Controller
     {
         // return view('home');
         return redirect()->route('product.index');
+        // 
     }
 }
