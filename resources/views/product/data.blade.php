@@ -19,7 +19,9 @@
                 <td>{{ $data->exp }}</td>
                 <td class="text-center">{{ $data->karton }}</td>
                 <td>{{ $data->created_at }}</td>
-                <td></td>
+                <td>
+                    <a target="_blank" href="{{ route('product.show',$data->id) }}" class="button btn btn-info btn-xs"><i class="fa fa-print"></i></a>
+                </td>
             </tr>
         @empty
             <tr>

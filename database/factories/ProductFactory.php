@@ -7,7 +7,7 @@ $factory->define(App\Product::class, function (Faker $faker) {
         //
         'loc' => $faker->city,
         'batch' => $faker->numberBetween(1,99),
-        'exp' => $faker->dateTime(),
+        'exp' => $faker->date(),
         'karton' => $faker->numberBetween(1,99),
         'status' => $faker->numberBetween(1,2),
     ];

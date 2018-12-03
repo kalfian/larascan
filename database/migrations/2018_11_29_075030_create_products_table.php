@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('loc');
             $table->integer('batch');
-            $table->dateTime('exp');
+            $table->date('exp');
             $table->integer('karton');
             $table->tinyInteger('status');
             $table->timestamps();

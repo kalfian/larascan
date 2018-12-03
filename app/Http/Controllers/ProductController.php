@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use DB;
 use Redirect;
 use Validator;
+use DNS1D;
+use DNS2D;
+use PDF;
 
 class ProductController extends Controller
 {
@@ -65,7 +68,7 @@ class ProductController extends Controller
         ->insert([
             'loc' => $request->loc,
             'batch' => $request->batch,
-            'exp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->exp))).' 00:00:00',
+            'exp' => date('Y-m-d', strtotime(str_replace('/', '-', $request->exp))),
             'karton' => $request->karton,
             'status' => '2',
             'created_at' => date('Y-m-d H:i:s'),
@@ -89,7 +92,28 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $barcode = date('ymdHis', strtotime(str_replace('/', '-', $product->created_at))).str_pad($product->id, 3, "0", STR_PAD_LEFT);;
+        $product->barcode = $barcode;
+        // print_r($barcode);
+        
+        $pdf = PDF::loadView('product.detail',$product);
+        return $pdf->stream();
+
+        // return view('product.detail',['barcode' => $barcode,'karton' => $product->karton]);
+    }
+    public function allDownload()
+    {
+        $data = DB::table('products')->select('created_at','karton','id')->get();
+        foreach ($data as $datas){
+            $datas->barcode = date('ymdHis', strtotime(str_replace('/', '-', $datas->created_at))).str_pad($datas->id, 3, "0", STR_PAD_LEFT);
+        }
+        // $barcode = 
+        // $product->barcode = $barcode;
+        // print_r($barcode);
+        // print_r($data);
+        $pdf = PDF::loadView('product.alldetail',compact('data'));
+        return $pdf->stream();
+        // return view('product.alldetail',compact('data'));
     }
 
     /**

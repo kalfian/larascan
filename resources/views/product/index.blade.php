@@ -9,6 +9,7 @@
             <div class="box-body">
                 <div class="clearfix">
                     <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-add">Tambah</button>
+                    <a style="margin-right: 20px" target="_blank" href="{{ route('product.all') }}" type="button" class="btn btn-warning pull-right">Print All</a>
                 </div>
                 <div id="tableView" class="box-body table-responsive no-padding">
                     
@@ -103,6 +104,10 @@
         $("input[name=exp]").removeAttr('readonly');
         $("input[name=karton]").removeAttr('readonly');
     }
+    function hideModal(){
+        $("#modal-add").modal('hide');
+        $("#msg-modal").html();
+    }
     function saveData(add=0){
         disableAction();
         disableInput();
@@ -140,9 +145,10 @@
                     enableAction();
                     enableInput();
                     if(add == 1){
-                        $("#msg-modal").html(e.data);    
+                        $("#msg-modal").html(e.data);
                     }else{
-                        $("#modal-add").modal('hide');
+                        $("#msg-modal").html(e.data);
+                        hideModal();
                     }
                 }
 
