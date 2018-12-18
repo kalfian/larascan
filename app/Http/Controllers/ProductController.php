@@ -15,6 +15,9 @@ class ProductController extends Controller
 {
     public function getData(){
         $data = DB::table('products')->orderBy('id', 'desc')->get();
+        foreach ($data as $datas){
+            $datas->barcode = date('ymdHis', strtotime(str_replace('/', '-', $datas->created_at))).str_pad($datas->id, 3, "0", STR_PAD_LEFT);
+        }
         return view('product.data',['datas' => $data]);
     }
     /**
@@ -90,20 +93,45 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(Product $product,$ukuran = "A4")
     {
+        $available = ['A4','A5','B5'];
+        if(in_array($ukuran,$available)){
+            $ukur = $ukuran;
+        }else{
+            $ukur = "A4";
+        }
+        
         $barcode = date('ymdHis', strtotime(str_replace('/', '-', $product->created_at))).str_pad($product->id, 3, "0", STR_PAD_LEFT);;
         $product->barcode = $barcode;
         // print_r($barcode);
-        
-        $pdf = PDF::loadView('product.detail',$product);
-        return $pdf->stream();
+        // print_r($ukuran);
+        $pdf = PDF::loadView('product.detail',$product,[],[
+            'format' => $ukur,
+        ]);
+        return $pdf->stream('Report_'.$product->loc.'_'.date('Y-m-d H:i:s'));
 
         // return view('product.detail',['barcode' => $barcode,'karton' => $product->karton]);
     }
-    public function allDownload()
+    public function allDownload(Request $request,$ukuran = "A4")
     {
-        $data = DB::table('products')->select('created_at','karton','id')->get();
+        
+        $available = ['A4','A5','B5'];
+        if(in_array($ukuran,$available)){
+            $ukur = $ukuran;
+        }else{
+            $ukur = "A4";
+        }
+        if($request->d){
+            $d = $request->d;
+            $dataId = explode(",",$d);
+            $data = DB::table('products')
+                    ->select('created_at','karton','id','loc')
+                    ->whereIn('id',$dataId)
+                    ->get();
+        }else{
+            $data = DB::table('products')->select('created_at','karton','id','loc')->get();
+        }
         foreach ($data as $datas){
             $datas->barcode = date('ymdHis', strtotime(str_replace('/', '-', $datas->created_at))).str_pad($datas->id, 3, "0", STR_PAD_LEFT);
         }
@@ -111,7 +139,9 @@ class ProductController extends Controller
         // $product->barcode = $barcode;
         // print_r($barcode);
         // print_r($data);
-        $pdf = PDF::loadView('product.alldetail',compact('data'));
+        $pdf = PDF::loadView('product.alldetail',compact('data'),[],[
+            'format' => $ukur,
+        ]);
         return $pdf->stream();
         // return view('product.alldetail',compact('data'));
     }

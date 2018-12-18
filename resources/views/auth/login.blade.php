@@ -1,13 +1,17 @@
-@extends('layouts.app')
-
+@extends('layouts.master')
+@section('title')
+    Login
+@endsection
 @section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-
-                <div class="panel-body">
+        <section class="content">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Login</h3>
+                </div>
+                <div class="box-body">
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
@@ -63,7 +67,8 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </div>
+    </div>
 @endsection

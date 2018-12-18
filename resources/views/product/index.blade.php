@@ -7,9 +7,82 @@
     <section class="content">
         <div class="box box-default">
             <div class="box-body">
+                <div class="box-body">
+                    <form action="{{ route('product.store') }}" method="POST" id="add-form">{{ csrf_field() }}
+                        <input type="hidden" value="0" name="_more">
+                        <div id="msg-modal"></div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="loc">Lokasi Perkebunan</label>
+                                {{-- <input type="text" class="form-control" name="loc" id="loc" placeholder="lokasi perkebunan..."> --}}
+                                <select name="loc" id="loc" class="form-control">
+                                    <option value="Malang">Malang</option>
+                                    <option value="Surabaya">Surabaya</option>
+                                    <option value="Jakarta">Jakarta</option>
+                                </select>
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exp">Expired Date</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    <input type="text" class="form-control" name="exp" id="exp" placeholder="Tanggal kadaluarsa...">
+                                </div>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="batch">Batch Produksi</label>
+                                <input type="number" class="form-control" name="batch" id="batch" placeholder="Batch ke...">
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="karton">Jumlah Karton</label>
+                                <input type="number" class="form-control" name="karton" id="karton" placeholder="Jumlah karton...">
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="clearfix">
+                                <button type="button" id="saveadd" class="pull-right btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="container">
+    <section class="content">
+        <div class="box box-default">
+            <div class="box-body">
                 <div class="clearfix">
-                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-add">Tambah</button>
-                    <a style="margin-right: 20px" target="_blank" href="{{ route('product.all') }}" type="button" class="btn btn-warning pull-right">Print All</a>
+                    <div class="col-md-4">
+                    <select class="form-control pull-left" id="kertas">
+                        <option value="A4">A4</option>
+                        <option value="A5">A5</option>
+                        <option value="B5">B5</option>
+                    </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="searchbox" placeholder="Cari ...">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <form action="{{ route('product.all') }}" id="getBatch" method="POST" target="_blank">
+                                {{ csrf_field() }}
+                                <input onkeypress="" type="hidden" id="selectedItem" name="d">
+                                <a style="margin-right: 20px" onclick="event.preventDefault();
+                                document.getElementById('getBatch').submit();" type="button" class="btn btn-warning pull-right">Print Batch</a>
+                        </form>
+                    </div>
                 </div>
                 <div id="tableView" class="box-body table-responsive no-padding">
                     
@@ -17,48 +90,6 @@
             </div>
         </div>
     </section>
-</div>
-<div class="modal fade" id="modal-add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-    <form action="{{ route('product.store') }}" method="POST" id="add-form">{{ csrf_field() }}
-        <input type="hidden" value="0" name="_more">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Tambah Produksi</h4>
-            </div>
-            <div class="modal-body">
-                    <div id="msg-modal">
-                        
-                    </div>
-                    <div class="form-group">
-                        <label for="loc">Lokasi Perkebunan</label>
-                        <input type="text" class="form-control" name="loc" id="loc" placeholder="lokasi perkebunan...">
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="batch">Batch Produksi</label>
-                        <input type="number" class="form-control" name="batch" id="batch" placeholder="Batch ke...">
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="exp">Expired Date</label>
-                        <input type="text" class="form-control" name="exp" id="exp" placeholder="Tanggal kadaluarsa...">
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="karton">Jumlah Karton</label>
-                        <input type="number" class="form-control" name="karton" id="karton" placeholder="Jumlah karton...">
-                        <span class="help-block"></span>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="saveadd" class="btn btn-primary">Save & Add another</button>
-                <button type="button" id="save" class="btn btn-primary">Save</button>
-            </div>
-        </div>
-    </form>
-    </div>
 </div>
 @endsection
 @section('style')
@@ -74,13 +105,53 @@
 @section('script')
 
 <script>
+    function getDetail(e){
+        let ukuran = $("#kertas").val();
+        window.open($(e).attr('href')+"/"+ukuran,'_blank');
+    }
+    function printBatch(){
+        var items=document.getElementsByName('batch');
+        var selectedItems="";
+        for(var i=0; i<items.length; i++){
+            if(items[i].type=='checkbox' && items[i].checked==true)
+            selectedItems+= ","+items[i].value;
+        }
+        $("#selectedItem").val(selectedItems.substr(1));
+    }
+    $(document).ready(function(){
+        reloadData();
+    });
+    function selectAll(e){
+        var items=document.getElementsByName('batch');
+        if(!$(e).is(':checked')){
+            for(var i=0; i<items.length; i++){
+                items[i].checked=false
+            }
+        }else{
+            for(var i=0; i<items.length; i++){
+                if(items[i].type=='checkbox' && items[i].checked===false)
+                    items[i].checked=true
+            }
+        }
+    }
     function reloadData(){
         $.ajax({
             method: "get",
             url: "{{ route('product.data') }}",
             success:function(e){
                     $("#tableView").html(e);
-                    $("#product-table").DataTable();
+                    $("#product-table").DataTable({
+                        columnDefs: [ {
+                            orderable: false,
+                            className: 'select-checkbox',
+                            targets:   0
+                        } ],
+                        select: {
+                            style:    'os',
+                            selector: 'td:first-child'
+                        },
+                        order: [[ 1, 'asc' ]]
+                    });
             }
         });
     }
@@ -93,13 +164,13 @@
         $('#save').removeAttr('disabled');
     }
     function disableInput(){
-        $("input[name=loc]").attr('readonly','readonly');
+        $("select[name=loc]").attr('readonly','readonly');
         $("input[name=batch]").attr('readonly','readonly');
         $("input[name=exp]").attr('readonly','readonly');
         $("input[name=karton]").attr('readonly','readonly');
     }
     function enableInput(){
-        $("input[name=loc]").removeAttr('readonly');
+        $("select[name=loc]").removeAttr('readonly');
         $("input[name=batch]").removeAttr('readonly');
         $("input[name=exp]").removeAttr('readonly');
         $("input[name=karton]").removeAttr('readonly');
@@ -112,7 +183,7 @@
         disableAction();
         disableInput();
         $("input").parent().removeClass('has-error');
-        $("input").parent().find('.help-block').text("");
+        $("input").parent().parent().find('.help-block').text("");
         $.ajax({
             method: "post",
             url: "{{ route('product.store') }}",
@@ -123,19 +194,19 @@
                 if(e.status == 0){
                     if(e.error_msg.loc){
                         $("input[name=loc]").parent().addClass('has-error');
-                        $("input[name=loc]").parent().find('.help-block').text(e.error_msg.loc);
+                        $("input[name=loc]").parent().parent().find('.help-block').text(e.error_msg.loc);
                     }
                     if(e.error_msg.batch){
                         $("input[name=batch]").parent().addClass('has-error');
-                        $("input[name=batch]").parent().find('.help-block').text(e.error_msg.batch);
+                        $("input[name=batch]").parent().parent().find('.help-block').text(e.error_msg.batch);
                     }
                     if(e.error_msg.exp){
                         $("input[name=exp]").parent().addClass('has-error');
-                        $("input[name=exp]").parent().find('.help-block').text(e.error_msg.exp);
+                        $("input[name=exp]").parent().parent().find('.help-block').text(e.error_msg.exp);
                     }
                     if(e.error_msg.karton){
                         $("input[name=karton]").parent().addClass('has-error');
-                        $("input[name=karton]").parent().find('.help-block').text(e.error_msg.karton);
+                        $("input[name=karton]").parent().parent().find('.help-block').text(e.error_msg.karton);
                     }
                     enableInput();
                     enableAction();
@@ -156,7 +227,10 @@
             }
         });
     }   
-    reloadData();
+    
+    $("#close").on('click',function(){
+        $("#add-form")[0].reset();
+    });
     $("#saveadd").on('click',function(){
         saveData(1);
     });
@@ -165,7 +239,8 @@
     });
     
     $("#searchbox").keyup(function() {
-        dataTable.fnFilter(this.value);
+        $("input[type=search]").keyup();
+        $("input[type=search]").val($(this).val());
     });
     $("#exp").datepicker({
         autoclose: true,

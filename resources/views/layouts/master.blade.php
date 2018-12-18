@@ -39,7 +39,7 @@
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="../../index2.html" class="navbar-brand">Barcode Generator</a>
+          <a href="{{route('product.index')}}" class="navbar-brand">Barcode Generator</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -50,6 +50,10 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
+            @guest
+            
+            @else
+            <li><a href="{{ route('register') }}">Register</a></li>
             <li>
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault();
@@ -61,6 +65,7 @@
                     {{ csrf_field() }}
                 </form>
             </li>
+            @endguest
         </ul>
         </div>
         <!-- /.navbar-custom-menu -->

@@ -7,24 +7,28 @@
     <style>
         div.center{
             text-align: center;
+            display: inline-block;
         }
-        table{
-            width: 200mm;
-            text-align: center;
+        h3{
+            margin-left:15px;
+            text-align: left;
+            font-family: Arial, Helvetica, sans-serif
         }
-        .container{
-            width: 210mm;
-        }
-        .barcode-container{
-            width: 60mm;
+        .barcode{
+            margin: 0 10px 10px;
+            width: 3cm;
+            padding:1mm;
+            vertical-align: center;
+            /* display: inline-block; */
             float: left;
+            border:1px solid #ccc;
         }
         .text-center{
             text-align: center;
         }
         p{
-            margin-top:0;
-            font-size: 12px;
+            margin:0;
+            font-size: 10px;
         }
         table tr td{
             text-align: center;
@@ -34,21 +38,15 @@
 </head>
 <body>
     <div class="center">
-    <?php $b=1; ?> 
     @foreach($data as $datas)
-    
-    @for($a=1;$a<=$datas->karton;$a++)
-    
-        <div class="barcode-container">
-            <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($datas->barcode, 'I25', 1.5)}}" alt="Barcode">
-            <p class="text-center">{{ $datas->barcode }}</p>
-        </div>
-        <?php $mod = $b%3; ?>
-        @if($mod == 0)
+        <h3>{{ $datas->loc }}</h3>
+        @for($a=1;$a<=$datas->karton;$a++)
+            <div class="barcode">
+                <img style="max-width:100%" src="data:image/png;base64,{{DNS1D::getBarcodePNG($datas->barcode, 'I25', 1)}}" alt="Barcode">
+                <p class="text-center">{{ $datas->barcode }}</p>
+            </div>
+        @endfor
         <br><br><br><br>
-        @endif
-    <?php $b++; ?>
-    @endfor
     @endforeach
     </div>
 </body>

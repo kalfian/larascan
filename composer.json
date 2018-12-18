@@ -6,11 +6,11 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
-        "barryvdh/laravel-dompdf": "^0.8.3",
         "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "milon/barcode": "^5.3"
+        "milon/barcode": "^5.3",
+        "niklasravnsborg/laravel-pdf": "^3.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
